@@ -18,11 +18,11 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping("/")
-    public String index(@RequestParam(required = false) String initData, Model model) {
+    public String home(@RequestParam(required = false) String initData, Model model) {
         if (!tgAuthService.validateInitData(initData)) {
             model.addAttribute("error", "Invalid or missing initData");
             model.addAttribute("isAuthenticated", false);
-            return "error";
+            return "home";
         }
         Map<String, String> data = tgAuthService.parseInitData(initData);
         User user = new User();
@@ -35,6 +35,6 @@ public class UserController {
 
         model.addAttribute("user", user);
         model.addAttribute("isAuthenticated", true);
-        return "index";
+        return "home";
     }
 }
