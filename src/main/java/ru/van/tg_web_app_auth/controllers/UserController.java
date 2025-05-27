@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.van.tg_web_app_auth.entities.User;
 import ru.van.tg_web_app_auth.repositories.UserRepository;
@@ -18,7 +19,16 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping("/")
-    public String home(@RequestParam(required = false) String initData, Model model) {
+    public String handleGet(@RequestParam(required = false) String initData, Model model) {
+        return handleAuth(initData, model);
+    }
+
+    @PostMapping("/")
+    public String handlePost(@RequestParam(required = false) String initData, Model model) {
+        return handleAuth(initData, model);
+    }
+
+    private String handleAuth(String initData, Model model) {
         if (!tgAuthService.validateInitData(initData)) {
             model.addAttribute("error", "Invalid or missing initData");
             model.addAttribute("isAuthenticated", false);
