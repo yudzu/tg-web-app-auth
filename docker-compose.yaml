@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+    - POSTGRES_DB=tg_user_db
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    ports:
+    - 5432:5432
+    volumes:
+    - postgres_data:/var/lib/postgresql/data/
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    environment:
+    - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+    - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+    - 5050:80
+    depends_on:
+    - postgres
+    volumes:
+    - pgadmin-data:/var/lib/pgadmin
+    restart: unless-stopped
+
+  tg-web-app-auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tg-web-app-auth
+    ports:
+    - 8080:8080
+    environment:
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/tg_user_db
+    - SPRING_DATASOURCE_USERNAME=postgres
+    - SPRING_DATASOURCE_PASSWORD=postgres
+    - TG_BOT_TOKEN=YOUR_TG_BOT_TOKEN_HERE
+    depends_on:
+    - postgres
+
+volumes:
+  postgres_data:
+  pgadmin-data:

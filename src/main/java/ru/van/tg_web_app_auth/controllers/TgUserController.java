@@ -6,17 +6,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.van.tg_web_app_auth.entities.User;
-import ru.van.tg_web_app_auth.repositories.UserRepository;
+import ru.van.tg_web_app_auth.entities.TgUser;
+import ru.van.tg_web_app_auth.repositories.TgUserRepository;
 import ru.van.tg_web_app_auth.services.TgAuthService;
 
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-public class UserController {
+public class TgUserController {
     private final TgAuthService tgAuthService;
-    private final UserRepository userRepository;
+    private final TgUserRepository tgUserRepository;
 
     @GetMapping("/")
     public String handleGet(@RequestParam(required = false) String initData, Model model) {
@@ -35,13 +35,13 @@ public class UserController {
             return "home";
         }
         Map<String, String> data = tgAuthService.parseInitData(initData);
-        User user = new User();
+        TgUser user = new TgUser();
         user.setId(Long.parseLong(data.get("user_id")));
         user.setFirstName(data.get("first_name"));
         user.setLastName(data.get("last_name"));
         user.setUsername(data.get("username"));
 
-        userRepository.save(user);
+        tgUserRepository.save(user);
 
         model.addAttribute("user", user);
         model.addAttribute("isAuthenticated", true);
